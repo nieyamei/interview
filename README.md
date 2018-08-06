@@ -6,10 +6,84 @@
 > 3. innodb和myisam的特性，区别，用途
 > 4. 多列索引的生效规则
 > 5. sql语句优化的具体实例
-> 6. 二维数组排序
+> 6. 二维数组排序  array_multisort()
 > 7. 字符串内置函数题
 > 8. 快速排序，插入排序，二分排序等基础排序算法
 ```
+> 快速排序
+
+<?php
+function quickSort(&$arr){
+    if(count($arr)>1){
+        $k=$arr[0];
+        $x=array();
+        $y=array();
+        $_size=count($arr);
+        for($i=1;$i<$_size;$i++){
+            if($arr[$i]<=$k){
+                $x[]=$arr[$i];
+            }elseif($arr[$i]>$k){
+                $y[]=$arr[$i];
+            }
+        }
+        $x=quickSort($x);
+        $y=quickSort($y);
+        return array_merge($x,array($k),$y);
+    }else{
+        return$arr;
+    }
+}
+?>
+> 插入排序
+
+//直接插入排序
+
+function swap(array &$arr,$a,$b){
+    $temp = $arr[$a];
+    $arr[$a] = $arr[$b];
+    $arr[$b] = $temp;
+}
+
+function InsertSort(array &$arr){
+    $count = count($arr);
+    //数组中第一个元素作为一个已经存在的有序表
+    for($i = 1;$i < $count;$i ++){
+        $temp = $arr[$i];      //设置哨兵
+        for($j = $i - 1;$j >= 0 && $arr[$j] > $temp;$j --){
+            $arr[$j + 1] = $arr[$j];       //记录后移
+        }
+        $arr[$j + 1] = $temp;      //插入到正确的位置
+    }
+}
+
+$arr = array(9,1,5,8,3,7,4,6,2);
+InsertSort($arr);
+var_dump($arr);
+
+> 二分查找
+function func($arr, $key, $low=0, $high=0)
+{
+    if ($low <= $high) {
+        if ($low == 0 && $high == 0) {
+            $high = count($high);
+        }
+
+        $mid = intval(($low + $high) / 2);
+
+        if ($arr[$mid] == $key) {
+            echo $arr[$mid];
+        } elseif ($arr[$mid] > $key) {
+            func($arr, $key, $low, $mid-1);
+        } else {
+            func($arr, $key, $mid+1, $high);
+        }
+    }
+}
+
+$arr = ['a', 'b', 'c'];
+func($arr, 'c');
+
+
 1. PHP弱类型实现靠底层一个叫zval的一个结构体[ 这个结构体包括 type value is_ref ref_count  其中is_ref 和ref_count 对垃圾回收起重要作用]
 2. PHP变量是存储在联合体中 [联合体中的变量类型 有long double str hashtable obj]
 > 结构体和联合体的区别
