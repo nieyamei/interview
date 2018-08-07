@@ -148,12 +148,48 @@ typedef union _zvalue_value {
 >   3).这里就是一些你想要什么发展
    
 > ### 新浪
-> 1.  $a='abcd'; 给出多种方法字符串反转。
+> 1.  $a='abcd'; 给出多种方法字符串反转。strrev  strlen倒置 交换 
 > 2. 会不会lua
 > 3. 会不会shell
 > 4. 遍历文件夹下所有文件
-> 5. 查找指定日志文件
+> 5. 查找指定日志文件   tail -f /data/logs/   |grep "mysql"
 > 6. 日志分析
+
+4.
+<?php
+//递归方式
+function read_dir($dir){
+	$files=array();
+	$dir_list=scandir($dir);
+	foreach($dir_list as $file){
+		if($file!='..' && $file!='.'){
+			if(is_dir($dir.'/'.$file)){
+				$files[]=read_dir($dir.'/'.$file);
+			}else{
+				$files[]=$file;
+			}
+		}
+	}
+	return $files;
+}
+//队列方式 
+function read_dir_queue($dir){
+	$files=array();
+	$queue=array($dir);
+	while($data=each($queue)){
+		$path=$data['value'];
+		if(is_dir($path) && $handle=opendir($path)){
+			while($file=readdir($handle)){
+				if($file=='.'||$file=='..') continue;
+				$files[] = $real_path=$path.'/'.$file;
+				if (is_dir($real_path)) $queue[] = $real_path;
+			}
+		}
+		closedir($handle);
+	}
+	 return $files;
+}
+print_r(read_dir_queue('D:/webroot/suanfa/dir'));exit;
 
 > ### 金融上市公司
 > 1. 查找目录下全部文件中是否有test()这个方法。
